@@ -5,7 +5,7 @@ export default function NavBar() {
 
   return (
     <nav className="flex justify-between items-center p-4 bg-gray-800 text-white">
-      <div>KeyPass</div>
+      <div>Passkey Demo</div>
       <div>
         {isLoggedIn ? (
           <div className="flex items-center gap-4">
