@@ -39,7 +39,6 @@ const Login: React.FC = () => {
     handleSubmit,
     formState: { errors },
     watch,
-    getValues,
   } = useForm<LoginRequest>();
 
   const username = watch("username");
@@ -53,9 +52,8 @@ const Login: React.FC = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const { username } = getValues();
-      const response = await registerPasskey(username, username); // Using username as email for now
-      login(response.token, response.user);
+      const response = await registerPasskey();
+      login(response.access_token, response.user);
       const from = (location.state as LocationState)?.from?.pathname || "/";
       navigate(from);
     } catch (err) {
@@ -157,8 +155,8 @@ const Login: React.FC = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await loginWithPasskey();
-      login(response.token, response.user);
+      const response = await loginWithPasskey(username);
+      login(response.access_token, response.user);
       const from = (location.state as LocationState)?.from?.pathname || "/";
       navigate(from);
     } catch (err) {
@@ -181,7 +179,8 @@ const Login: React.FC = () => {
             Setup Passkey
           </h2>
           <p className="mt-4 text-center text-sm text-gray-600">
-            Would you like to setup a passkey for faster and more secure login next time?
+            Would you like to setup a passkey for faster and more secure login
+            next time?
           </p>
         </div>
 
@@ -208,7 +207,8 @@ const Login: React.FC = () => {
             </button>
             <button
               onClick={() => {
-                const from = (location.state as LocationState)?.from?.pathname || "/";
+                const from =
+                  (location.state as LocationState)?.from?.pathname || "/";
                 navigate(from);
               }}
               className="text-sm text-indigo-600 hover:text-indigo-500"

@@ -10,6 +10,7 @@ import type {
   PasskeyLoginStartResponse,
   PasskeyLoginFinishRequest,
   PasskeyLoginFinishResponse,
+  PasskeyLoginStartRequest,
 } from "../types/passkey";
 
 class PasskeyError extends Error {
@@ -96,21 +97,29 @@ export async function registerPasskey() {
   }
 }
 
-export async function loginWithPasskey() {
+export async function loginWithPasskey(username: string) {
   try {
     // Get authentication options from the server
-    const { options } = await api.get<PasskeyLoginStartResponse>(
-      "/auth/passkey/login-start"
-    );
+    const { options } = await api.post<
+      PasskeyLoginStartResponse,
+      PasskeyLoginStartRequest
+    >("/auth/passkey/login-start", { username });
 
     // Pass the options to the authenticator and get the response
-    const authResp = await startAuthentication(options);
+    const authResp = await startAuthentication({
+      optionsJSON: options,
+      useBrowserAutofill: false,
+      verifyBrowserAutofillInput: false,
+    });
 
     // Send the response to the server to verify and get the user data
     const verificationResp = await api.post<
       PasskeyLoginFinishResponse,
       PasskeyLoginFinishRequest
-    >("/auth/passkey/login-finish", authResp);
+    >("/auth/passkey/login-finish", {
+      options: authResp,
+      username,
+    });
 
     if (!verificationResp.verified) {
       throw new PasskeyError(

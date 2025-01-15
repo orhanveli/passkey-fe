@@ -5,6 +5,7 @@ import type {
   AuthenticationResponseJSON,
   RegistrationResponseJSON,
 } from "@simplewebauthn/browser";
+import { UserProfile } from "./api";
 
 export interface PasskeyRegisterStartResponse {
   options: PublicKeyCredentialCreationOptionsJSON;
@@ -15,26 +16,25 @@ export interface PasskeyRegisterFinishRequest
 
 export interface PasskeyRegisterFinishResponse {
   verified: boolean;
-  token: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-  };
+  access_token: string;
+  user: UserProfile;
+}
+
+export interface PasskeyLoginStartRequest {
+  username: string;
 }
 
 export interface PasskeyLoginStartResponse {
   options: PublicKeyCredentialRequestOptionsJSON;
 }
 
-export interface PasskeyLoginFinishRequest extends AuthenticationResponseJSON {}
+export interface PasskeyLoginFinishRequest {
+  username: string;
+  options: AuthenticationResponseJSON;
+}
 
 export interface PasskeyLoginFinishResponse {
   verified: boolean;
-  token: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-  };
+  access_token: string;
+  user: UserProfile;
 }
