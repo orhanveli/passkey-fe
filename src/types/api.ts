@@ -1,11 +1,13 @@
 export interface LoginRequest {
   username: string;
-  password: string;
+  password?: string;
+  regular_login?: boolean;
 }
 
 export interface LoginResponse {
-  access_token: string;
-  user: User;
+  access_token?: string;
+  user?: User;
+  passkey_enabled: boolean;
 }
 
 export interface User {
