@@ -1,15 +1,42 @@
 import { create } from "zustand";
+import type { User, UserProfile } from "../types/api";
+import { api } from "../utils/api";
 
 interface AuthState {
-  isLoggedIn: boolean;
-  username: string | null;
-  login: (username: string) => void;
+  isAuthenticated: boolean;
+  isInitialized: boolean;
+  user: User | null;
+  login: (accessToken: string, user: User) => void;
   logout: () => void;
+  initialize: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isLoggedIn: false,
-  username: null,
-  login: (username) => set({ isLoggedIn: true, username }),
-  logout: () => set({ isLoggedIn: false, username: null }),
+  isAuthenticated: false,
+  isInitialized: false,
+  user: null,
+  login: (accessToken: string, user: User) => {
+    sessionStorage.setItem("access_token", accessToken);
+    set({ isAuthenticated: true, user });
+  },
+  logout: () => {
+    sessionStorage.removeItem("access_token");
+    set({ isAuthenticated: false, user: null });
+  },
+  initialize: async () => {
+    try {
+      const token = sessionStorage.getItem("access_token");
+      if (!token) {
+        set({ isInitialized: true });
+        return;
+      }
+
+      const { user } = await api.get<{ user: UserProfile }>("/auth/me");
+      set({ isAuthenticated: true, user, isInitialized: true });
+    } catch (error) {
+      console.error("Failed to initialize auth state:", error);
+      sessionStorage.removeItem("access_token");
+      set({ isAuthenticated: false, user: null, isInitialized: true });
+    }
+  },
 }));

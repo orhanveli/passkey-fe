@@ -1,11 +1,11 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuthStore } from '../store/auth';
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuthStore } from "../stores/authStore";
 
 interface AuthGuardProps {
   children: React.ReactNode;
 }
 
-export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
+const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
   const location = useLocation();
 
@@ -15,3 +15,5 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
 
   return <>{children}</>;
 };
+
+export default AuthGuard;

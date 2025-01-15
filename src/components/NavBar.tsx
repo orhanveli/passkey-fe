@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/auth";
+import { useAuthStore } from "../stores/authStore";
 
 export default function NavBar() {
   const navigate = useNavigate();
