@@ -3,7 +3,7 @@ import { useAuthStore } from "../stores/authStore";
 
 export default function NavBar() {
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isInitialized, isAuthenticated, logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
@@ -19,8 +19,14 @@ export default function NavBar() {
               PassKey
             </Link>
           </div>
+          <Link
+            to="/dashboard"
+            className="text-sm font-medium text-gray-300 hover:text-white"
+          >
+            Dashboard
+          </Link>
           <div className="flex items-center">
-            {isAuthenticated && user ? (
+            {isInitialized && isAuthenticated && user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex flex-col items-end">
                   <span className="text-sm font-medium text-gray-300">

@@ -41,7 +41,7 @@ const Login: React.FC = () => {
     watch,
   } = useForm<LoginRequest>();
 
-  const username = watch("username");
+  const email = watch("email");
 
   const handlePasskeySetup = async () => {
     if (!passkeySupport?.isSupported) {
@@ -67,9 +67,9 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleUsernameSubmit = async () => {
-    if (!username) {
-      setError("Username is required");
+  const handleEmailSubmit = async () => {
+    if (!email) {
+      setError("Email is required");
       return;
     }
 
@@ -79,7 +79,7 @@ const Login: React.FC = () => {
 
       const response = await api.post<LoginResponse, LoginRequest>(
         "/auth/login",
-        { username }
+        { email: email }
       );
 
       if (response.passkey_enabled) {
@@ -97,7 +97,7 @@ const Login: React.FC = () => {
       if (err instanceof Error) {
         setError(
           (err as ApiError).status === 401
-            ? "Invalid username"
+            ? "Invalid email"
             : "An error occurred. Please try again."
         );
       }
@@ -155,7 +155,7 @@ const Login: React.FC = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await loginWithPasskey(username);
+      const response = await loginWithPasskey(email);
       login(response.access_token, response.user);
       const from = (location.state as LocationState)?.from?.pathname || "/";
       navigate(from);
@@ -233,36 +233,36 @@ const Login: React.FC = () => {
         <form
           className="space-y-6"
           onSubmit={handleSubmit(
-            showPassword ? handlePasswordSubmit : handleUsernameSubmit
+            showPassword ? handlePasswordSubmit : handleEmailSubmit
           )}
         >
           <div>
             <label
-              htmlFor="username"
+              htmlFor="email"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Username
+              Email
             </label>
             <div className="mt-2">
               <input
-                id="username"
+                id="email"
                 type="text"
-                autoComplete="username webauthn"
+                autoComplete="email webauthn"
                 disabled={showPassword}
-                {...register("username", {
-                  required: "Username is required",
+                {...register("email", {
+                  required: "Email is required",
                 })}
                 className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
-                  errors.username
+                  errors.email
                     ? "ring-red-300 focus:ring-red-500"
                     : "ring-gray-300 focus:ring-indigo-600"
                 } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ${
                   showPassword ? "bg-gray-100" : ""
                 }`}
               />
-              {errors.username && (
+              {errors.email && (
                 <p className="mt-2 text-sm text-red-600">
-                  {errors.username.message}
+                  {errors.email.message}
                 </p>
               )}
             </div>
@@ -336,7 +336,7 @@ const Login: React.FC = () => {
                 }}
                 className="font-semibold text-indigo-600 hover:text-indigo-500"
               >
-                ← Back to username
+                ← Back to email
               </button>
             </div>
           )}

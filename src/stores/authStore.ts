@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { create } from "zustand";
 import type { User, UserProfile } from "../types/api";
 import { api } from "../utils/api";
@@ -21,6 +22,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   logout: () => {
     sessionStorage.removeItem("access_token");
+    console.log("removed local storage");
     set({ isAuthenticated: false, user: null });
   },
   initialize: async () => {
@@ -34,7 +36,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const { user } = await api.get<{ user: UserProfile }>("/auth/me");
       set({ isAuthenticated: true, user, isInitialized: true });
     } catch (error) {
-      console.error("Failed to initialize auth state:", error);
+      // console.error("Failed to initialize auth state:", error);
       sessionStorage.removeItem("access_token");
       set({ isAuthenticated: false, user: null, isInitialized: true });
     }
