@@ -4,12 +4,13 @@ import fs from "fs";
 import path from "path";
 
 const beHost = "http://localhost:13390";
-// const beHost = "https://passkeys-svc.spikeweb.dev";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: "0.0.0.0",
+    port: 3022,
     https: {
       key: fs.readFileSync(path.resolve(__dirname, "./certs/key.pem")),
       cert: fs.readFileSync(path.resolve(__dirname, "./certs/cert.pem")),
