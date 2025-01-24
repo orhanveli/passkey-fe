@@ -78,7 +78,7 @@ const Login: React.FC = () => {
       setError(null);
 
       const response = await api.post<LoginResponse, LoginRequest>(
-        "/auth/login",
+        "/api/auth/login",
         { email: email }
       );
 
@@ -96,8 +96,8 @@ const Login: React.FC = () => {
     } catch (err) {
       if (err instanceof Error) {
         setError(
-          (err as ApiError).status === 401
-            ? "Invalid email"
+          (err as ApiError).status === 400
+            ? err.message ?? "Invalid password"
             : "An error occurred. Please try again."
         );
       }
@@ -113,7 +113,7 @@ const Login: React.FC = () => {
       setError(null);
 
       const response = await api.post<LoginResponse, LoginRequest>(
-        "/auth/login",
+        "/api/auth/login",
         {
           ...data,
           regular_login: true,
@@ -135,8 +135,8 @@ const Login: React.FC = () => {
     } catch (err) {
       if (err instanceof Error) {
         setError(
-          (err as ApiError).status === 401
-            ? "Invalid password"
+          (err as ApiError).status === 400
+            ? err.message ?? "Invalid password"
             : "An error occurred. Please try again."
         );
       }

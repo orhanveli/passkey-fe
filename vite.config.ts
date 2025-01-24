@@ -3,6 +3,9 @@ import react from "@vitejs/plugin-react-swc";
 import fs from "fs";
 import path from "path";
 
+const beHost = "http://localhost:13390";
+// const beHost = "https://passkeys-svc.spikeweb.dev";
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -12,15 +15,11 @@ export default defineConfig({
       cert: fs.readFileSync(path.resolve(__dirname, "./certs/cert.pem")),
     },
     proxy: {
-      "/auth": {
-        target: "http://localhost:13390",
+      "/api": {
+        target: beHost,
         changeOrigin: true,
         secure: false,
-      },
-      "/user": {
-        target: "http://localhost:13390",
-        changeOrigin: true,
-        secure: false,
+        rewrite: (path: string) => path.replace("api/", ""),
       },
     },
   },

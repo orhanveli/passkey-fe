@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         return;
       }
 
-      const { user } = await api.get<{ user: UserProfile }>("/auth/me");
+      const { user } = await api.get<{ user: UserProfile }>("/api/auth/me");
       set({ isAuthenticated: true, user, isInitialized: true });
     } catch (error) {
       // console.error("Failed to initialize auth state:", error);

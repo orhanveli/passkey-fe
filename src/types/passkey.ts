@@ -21,7 +21,7 @@ export interface PasskeyRegisterFinishResponse {
 }
 
 export interface PasskeyLoginStartRequest {
-  username: string;
+  email: string;
 }
 
 export interface PasskeyLoginStartResponse {
@@ -29,7 +29,7 @@ export interface PasskeyLoginStartResponse {
 }
 
 export interface PasskeyLoginFinishRequest {
-  username: string;
+  email: string;
   options: AuthenticationResponseJSON;
 }
 

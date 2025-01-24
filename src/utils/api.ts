@@ -1,8 +1,14 @@
 import type { ApiError } from "../types/api";
 
-async function handleResponse<T>(response: Response): Promise<T> {
+async function handleResponse<T>(
+  response: Response & { message?: string }
+): Promise<T> {
   if (!response.ok) {
-    const error: ApiError = new Error("HTTP error");
+    const result = await response.json();
+    const errMsg = Array.isArray(result?.message)
+      ? result.message.join(", ")
+      : result.message;
+    const error: ApiError = new Error(errMsg || "HTTP error");
     error.status = response.status;
     throw error;
   }

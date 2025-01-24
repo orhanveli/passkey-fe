@@ -69,7 +69,7 @@ export async function registerPasskey() {
   try {
     // Get registration options from the server
     const { options } = await api.get<PasskeyRegisterStartResponse>(
-      "/auth/passkey/register-start"
+      "/api/auth/passkey/register-start"
     );
 
     // Pass the options to the authenticator and get the response
@@ -82,7 +82,7 @@ export async function registerPasskey() {
     const verificationResp = await api.post<
       PasskeyRegisterFinishResponse,
       PasskeyRegisterFinishRequest
-    >("/auth/passkey/register-finish", attResp);
+    >("/api/auth/passkey/register-finish", attResp);
 
     if (!verificationResp.verified) {
       throw new PasskeyError(
@@ -97,13 +97,13 @@ export async function registerPasskey() {
   }
 }
 
-export async function loginWithPasskey(username: string) {
+export async function loginWithPasskey(email: string) {
   try {
     // Get authentication options from the server
     const { options } = await api.post<
       PasskeyLoginStartResponse,
       PasskeyLoginStartRequest
-    >("/auth/passkey/login-start", { username });
+    >("/api/auth/passkey/login-start", { email });
 
     // Pass the options to the authenticator and get the response
     const authResp = await startAuthentication({
@@ -116,9 +116,9 @@ export async function loginWithPasskey(username: string) {
     const verificationResp = await api.post<
       PasskeyLoginFinishResponse,
       PasskeyLoginFinishRequest
-    >("/auth/passkey/login-finish", {
+    >("/api/auth/passkey/login-finish", {
       options: authResp,
-      username,
+      email,
     });
 
     if (!verificationResp.verified) {

@@ -1,6 +1,7 @@
 export interface LoginRequest {
   email: string;
   password?: string;
+  otp?: string;
   regular_login?: boolean;
 }
 
@@ -8,6 +9,7 @@ export interface LoginResponse {
   access_token?: string;
   user?: User;
   passkey_enabled: boolean;
+  totp_enabled: boolean;
 }
 
 export interface User {
